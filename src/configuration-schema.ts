@@ -19,11 +19,38 @@ import { JSONSchema7 } from "json-schema";
  * see https://react-jsonschema-form.readthedocs.io/en/latest/ for documentation
  */
 export const configurationSchema: JSONSchema7 = {
+  required: [
+  	"enddate",
+  	"expiredmessage"
+  ],
   properties: {
     enddate: {
-      type: "number",
+      type: "string",
       title: "End Date",
+      format: "date-time",
     },
+    expiredmessage: {
+    	type: "string",
+    	title: "Expired Message",
+    	default: "Countdown is done.",
+    },
+    colorbg: {
+    	type: "string",
+    	title: "Background Color",
+    	default: "#16ab79"
+    },
+    colorfont: {
+    	type: "string",
+    	title: "Text Color",
+    	default: "#00000"
+    },
+    borderradius: {
+    	type: "integer",
+    	title: "Border Radius",
+    	default: 5,
+    	minimum: 0,
+    	maximum: 100
+    }
   },
 };
 
@@ -34,5 +61,20 @@ export const configurationSchema: JSONSchema7 = {
 export const uiSchema: UiSchema = {
   enddate: {
     "ui:help": "Please enter a date in the Unix date format.",
+  },
+  expiredmessage: {
+  	"ui:help": "Enter an expiration message for the coundown."
+  },
+  colorbg: {
+  	"ui:widget": "color",
+  	"ui:help": "Choose a color for the background of the countdown boxes."
+  },
+  colorfont: {
+  	"ui:widget": "color",
+  	"ui:help": "Choose a color for the text."
+  },
+  borderradius: {
+  	"ui:widget": "range",
+  	"ui:help": "Choose a border radius for the countdown boxes."
   },
 };

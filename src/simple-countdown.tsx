@@ -13,45 +13,94 @@
 
 import React, { ReactElement } from "react";
 import { BlockAttributes } from "widget-sdk";
+import CSS from "csstype";
 
 /**
  * React Component
  */
 export interface SimpleCountdownProps extends BlockAttributes {
-  enddate: number;
+  enddate: string;
+  expiredmessage: string;
+  colorbg: string;
+  colorfont: string;
+  borderradius: integer;
 }
 
-const calculatedifference=(startdate: number, enddate: number = Date.now())=>{
+const calculatedifference=(startdate: number, enddate: string)=>{
+  const end = new Date(enddate).getTime();
+
   const second = 1000,
         minute = second * 60,
         hour = minute * 60,
         day = hour * 24;
-  const distance = enddate - startdate;
+
+  const distance = end - startdate;
+
   const days= Math.floor(distance / (day));
   const hours = Math.floor((distance % (day)) / (hour));
   const minutes = Math.floor((distance % (hour)) / (minute));
   const seconds = Math.floor((distance % (minute)) / second);
 
-  return {days, hours, minutes, seconds}
+  return {distance, days, hours, minutes, seconds}
 }
 
 
-export const SimpleCountdown = ({ enddate }: SimpleCountdownProps): ReactElement => {
+export const SimpleCountdown = ({ enddate, expiredmessage, colorbg, colorfont, borderradius }: SimpleCountdownProps): ReactElement => {
 	const [actualdate,setactualdate] = React.useState(Date.now());
-	const {days, hours, minutes, seconds} = calculatedifference(actualdate,enddate)
+	const {distance, days, hours, minutes, seconds} = calculatedifference(actualdate,enddate)
 	React.useEffect(()=>{
     	setInterval(()=>{setactualdate(Date.now())},1000)
 	},[])
 
+  const cardStyle: CSS.Properties = {
+    font: "sans-serif",
+    display: "block",
+    textAlign: "center",
+    fontSize: "30px",
+    margin: "-20px 0 25px 0",
+  };
 
+  const boxStyle: CSS.Properties = {
+    borderRadius: borderradius + "px",
+    color: colorfont,
+    display: "inline-block",
+    marginRight: "5px",
+    width: "22.5%",
+    padding: "15px 0",
+    background: colorbg,
+  };
 
-  return (<div>
-     <ul>
-       <li><span>{days}</span> Days</li>
-       <li><span>{hours}</span> Hours</li>
-       <li><span>{minutes}</span> Minutes</li>
-       <li><span>{seconds}</span> Seconds</li>
-     </ul>
-   </div>);
+  const smalltextStyle: CSS.Properties = {
+    paddingTop: "5px",
+    fontSize: "16px",
+    color: colorfont,
+    borderRadius: "3px",
+    display: "inline-block",
+  }
+
+  return <div style={cardStyle}>
+    { distance < 0 ?
+      <div><span style={smalltextStyle}>{expiredmessage}</span></div>
+      :
+      <div>
+        <div style={boxStyle}>
+          <div>{days}</div>
+          <span style={smalltextStyle}>Days</span>
+        </div>
+        <div style={boxStyle}>
+          <div>{hours}</div>
+          <span style={smalltextStyle}>Hours</span>
+        </div>
+        <div style={boxStyle}>
+          <div>{minutes}</div>
+          <span style={smalltextStyle}>Minutes</span>
+        </div>
+        <div style={boxStyle}>
+          <div>{seconds}</div>
+          <span style={smalltextStyle}>Seconds</span>
+        </div> 
+      </div>
+    }
+  </div>;
 };
 
