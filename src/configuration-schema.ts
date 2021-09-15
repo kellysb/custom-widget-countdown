@@ -50,6 +50,11 @@ export const configurationSchema: JSONSchema7 = {
     	default: 5,
     	minimum: 0,
     	maximum: 100
+    },
+    roworcolumn: {
+    	type: "string",
+    	title: "Row or Column?",
+    	enum: ["row","column"]
     }
   },
 };
@@ -77,4 +82,11 @@ export const uiSchema: UiSchema = {
   	"ui:widget": "range",
   	"ui:help": "Choose a border radius for the countdown boxes."
   },
+  roworcolumn: {
+  	"ui:widget": "radio",
+  	"ui:help": "Choose whether you want to display the counter as a row or column.",
+    "ui:options": {
+      "inline": true
+    }
+  }
 };

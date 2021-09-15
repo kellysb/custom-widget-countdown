@@ -24,6 +24,7 @@ export interface SimpleCountdownProps extends BlockAttributes {
   colorbg: string;
   colorfont: string;
   borderradius: integer;
+  roworcolumn: boolean;
 }
 
 const calculatedifference=(startdate: number, enddate: string)=>{
@@ -45,7 +46,7 @@ const calculatedifference=(startdate: number, enddate: string)=>{
 }
 
 
-export const SimpleCountdown = ({ enddate, expiredmessage, colorbg, colorfont, borderradius }: SimpleCountdownProps): ReactElement => {
+export const SimpleCountdown = ({ enddate, expiredmessage, colorbg, colorfont, borderradius, roworcolumn }: SimpleCountdownProps): ReactElement => {
 	const [actualdate,setactualdate] = React.useState(Date.now());
 	const {distance, days, hours, minutes, seconds} = calculatedifference(actualdate,enddate)
 	React.useEffect(()=>{
@@ -64,10 +65,15 @@ export const SimpleCountdown = ({ enddate, expiredmessage, colorbg, colorfont, b
     borderRadius: borderradius + "px",
     color: colorfont,
     display: "inline-block",
-    marginRight: "5px",
-    width: "22.5%",
+    margin: "0 5px 5px 0",
+    flexGrow: "1",
     padding: "15px 0",
     background: colorbg,
+  };
+
+  const containerStyle: CSS.Properties = {
+    display: "flex",
+    flexDirection: roworcolumn,
   };
 
   const smalltextStyle: CSS.Properties = {
@@ -82,7 +88,7 @@ export const SimpleCountdown = ({ enddate, expiredmessage, colorbg, colorfont, b
     { distance < 0 ?
       <div><span style={smalltextStyle}>{expiredmessage}</span></div>
       :
-      <div>
+      <div style={containerStyle}>
         <div style={boxStyle}>
           <div>{days}</div>
           <span style={smalltextStyle}>Days</span>
